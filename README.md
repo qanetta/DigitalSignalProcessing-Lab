@@ -22,7 +22,7 @@ DigitalSignalProcessing-Lab/
 │   │   ├── figures/                    # Hình ảnh, đồ thị mô phỏng xuất từ Scilab
 │   │   ├── main.tex                    # Mã nguồn chính của báo cáo LaTeX
 │   │   └── ...                         # Các gói phụ trợ hoặc cấu hình style
-│   └── LabX_DSP_<StudentID>.pdf        # File báo cáo PDF hoàn chỉnh sau khi biên dịch
+│   └── HK261_Report_L01_LabX_<StudentID>.pdf        # File báo cáo PDF hoàn chỉnh sau khi biên dịch
 └── README.md                           # Hướng dẫn tổng quan về repository
 
 ```
