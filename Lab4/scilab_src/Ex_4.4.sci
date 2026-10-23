@@ -37,8 +37,10 @@ function [y, fs]=load_audio(wav_path)
     y = matrix(y, 1, -1);
 endfunction
 
-// Duong dan file .wav (de trong "" de dung tin hieu thu)
-wav_path = "";
+// Duong dan file .wav, tinh tu thu muc chua script (de trong "" de dung tin hieu thu)
+//   cat_purr.wav : tieng meo grru 4 giay, mono 16 kHz (nguon: pixabay.com)
+src_dir = get_absolute_file_path("Ex_4.4.sci");
+wav_path = src_dir + "../data/cat_purr.wav";
 
 [y, fs] = load_audio(wav_path);
 N = length(y);
@@ -49,20 +51,22 @@ disp(N / fs, "thoi luong (s) =");
 t = (0:N - 1) / fs;
 Y = abs(fft(y)) / N;
 f = (0:N - 1) * fs / N;
-half = 1:floor(N / 2);
+
+// gioi han tan so hien thi (nang luong tieng grru tap trung o tan so thap)
+f_show = min(fs / 2, 1000);
+half = find(f <= f_show);
 
 clf();
 
-// dang song theo thoi gian (chi ve 20 ms dau cho de nhin)
+// dang song theo thoi gian (toan bo doan am thanh)
 subplot(2, 1, 1);
-n_show = min(N, round(0.02 * fs));
-plot(t(1:n_show), y(1:n_show), 'b');
+plot(t, y, 'b');
 xgrid(color('gray'));
 title("$\text{Audio waveform } x(t)$", "fontsize", 3);
 xlabel("$\text{Time (s)}$", "fontsize", 3);
 ylabel("$\text{Amplitude}$", "fontsize", 3);
 
-// pho bien do (nua duong tan so 0 -> fs/2)
+// pho bien do (tu 0 den f_show)
 subplot(2, 1, 2);
 plot(f(half), 2 * Y(half), 'r');
 xgrid(color('gray'));

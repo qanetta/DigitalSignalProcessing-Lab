@@ -5,12 +5,51 @@ clc; clear;
 //          cai dat: atomsInstall("IPCV"), sau do khoi dong lai Scilab
 //          ham hay dung: imread, imshow, imwrite, rgb2gray, imhist, imfilter, imresize
 //   SIVP : toolbox cu, khong con duoc cap nhat cho Scilab moi
-// Neu chua cai IPCV, script tu tao 1 anh xam de demo, cac phep xu ly
-// ben duoi chi dung ham co san cua Scilab (conv2, cumsum, Matplot)
+// Neu chua cai IPCV, script doc anh xam dang .pgm bang ham tu viet (read_pgm),
+// cac phep xu ly ben duoi chi dung ham co san cua Scilab (conv2, cumsum, Matplot)
+
+function img=read_pgm(pgm_path)
+    // doc anh xam dinh dang PGM nhi phan (P5) ma khong can toolbox
+    fd = mopen(pgm_path, "rb");
+    info = fileinfo(pgm_path);
+    b = mget(info(1), "uc", fd);
+    mclose(fd);
+
+    // tach 4 truong header: "P5", chieu rong, chieu cao, gia tri max
+    tokens = [];
+    pos = 1;
+    while size(tokens, "*") < 4
+        if b(pos) == 35 then
+            // bo qua dong comment bat dau bang '#'
+            while b(pos) <> 10
+                pos = pos + 1;
+            end
+        elseif or(b(pos) == [9, 10, 13, 32]) then
+            pos = pos + 1;
+        else
+            p0 = pos;
+            while ~or(b(pos) == [9, 10, 13, 32])
+                pos = pos + 1;
+            end
+            tokens = [tokens, ascii(b(p0:pos - 1))];
+        end
+    end
+    if tokens(1) <> "P5" then
+        error("read_pgm: chi ho tro PGM nhi phan (P5)");
+    end
+    w = evstr(tokens(2));
+    h = evstr(tokens(3));
+
+    // du lieu pixel bat dau sau 1 ky tu trang ke tu header, luu theo tung hang
+    data = b(pos + 1:pos + w * h);
+    img = matrix(data, w, h)';
+endfunction
 
 function img=load_gray_image(img_path)
-    // doc anh bang IPCV (neu co), nguoc lai tao anh thu
-    if img_path <> "" & exists("imread") then
+    // doc anh .pgm bang read_pgm, anh khac thi doc bang IPCV (neu co), nguoc lai tao anh thu
+    if img_path <> "" & convstr(fileext(img_path)) == ".pgm" then
+        img = read_pgm(img_path);
+    elseif img_path <> "" & exists("imread") then
         im = double(imread(img_path));
         if ndims(im) == 3 then
             // chuyen anh mau sang anh xam
@@ -65,8 +104,11 @@ function show_img(img, ttl)
     title(ttl, "fontsize", 3);
 endfunction
 
-// Duong dan anh (de trong "" de dung anh thu)
-img_path = "";
+// Duong dan anh, tinh tu thu muc chua script (de trong "" de dung anh thu)
+//   dog.pgm : anh xam, doc duoc ngay khong can IPCV
+//   dog.jpg : anh mau, can cai IPCV
+src_dir = get_absolute_file_path("Ex_4.5.sci");
+img_path = src_dir + "../data/dog.pgm";
 
 img = load_gray_image(img_path);
 [nr, nc] = size(img);
