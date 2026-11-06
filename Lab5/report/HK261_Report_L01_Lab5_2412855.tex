@@ -1,0 +1,502 @@
+\documentclass[12pt,a4paper]{article}
+
+% --- GÓI HỖ TRỢ TIẾNG VIỆT VÀ FONT ---
+\usepackage[utf8]{inputenc}
+\usepackage[vietnamese]{babel}
+\usepackage{times}
+\usepackage{graphicx}
+
+% --- CĂN CHỈNH LỀ VÀ KHOẢNG CÁCH ---
+\usepackage[left=2.5cm, right=2cm, top=2.5cm, bottom=2.5cm]{geometry}
+\usepackage{indentfirst}
+\usepackage{setspace}
+\setstretch{1.2}
+\usepackage{mdframed}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{float}
+\usepackage{array}
+\usepackage{booktabs}
+\usepackage{xcolor}
+
+% --- VẼ SƠ ĐỒ KHỐI ---
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning}
+\tikzset{
+    sum/.style={circle, draw, inner sep=0pt, minimum size=6mm},
+    block/.style={rectangle, draw, minimum width=11mm, minimum height=7mm},
+    gain/.style={rectangle, draw, rounded corners=2pt, minimum width=8mm, minimum height=6mm, fill=black!5},
+    dot/.style={circle, fill, inner sep=1.2pt},
+    >={Stealth[length=2.2mm]}
+}
+
+% Khung đề bài dùng chung cho các bài tập
+\mdfdefinestyle{exbox}{
+    linewidth=0.8pt,
+    linecolor=black,
+    backgroundcolor=white,
+    innertopmargin=10pt,
+    innerbottommargin=10pt,
+    innerleftmargin=12pt,
+    innerrightmargin=12pt,
+    skipabove=10pt,
+    skipbelow=10pt
+}
+
+% --- GÓI HỖ TRỢ ĐƯỜNG DẪN VÀ THAM KHẢO ---
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    urlcolor=blue,
+    citecolor=black
+}
+
+% Ký hiệu mũi tên đánh dấu gốc tọa độ n = 0
+\newcommand{\org}[1]{\underset{\uparrow}{#1}}
+% Ký hiệu cặp biến đổi Z
+\newcommand{\zpair}{\overset{Z}{\longleftrightarrow}}
+
+% --- THIẾT KẾ PHẦN TIÊU ĐỀ BÁO CÁO ---
+\title{
+    \vspace{-1.5cm}
+    \large\textbf{Xử Lý Tín Hiệu Số} \\
+    \normalsize HK261 \quad -- \quad CO2036 \\[1em]
+    \Large\textbf{BÀI THỰC HÀNH 5 XỬ LÝ TÍN HIỆU SỐ}
+}
+
+\author{
+    \textbf{Trần Minh Quang} -- \textbf{2412855}
+}
+
+\date{06/11/2026}
+
+\begin{document}
+
+\maketitle
+
+% --- PHẦN TỔNG QUAN ---
+\begin{abstract}
+\noindent\textbf{Tổng Quan:} Bài thực hành 5 sử dụng biến đổi Z, biến đổi Z một phía ($Z^+$) và biến đổi Z ngược để tìm đáp ứng xung, tính tích chập, tìm tín hiệu ứng với từng miền hội tụ và phân tích đáp ứng của hệ LTI có điều kiện đầu. Mọi kết quả giải tích đều được kiểm tra lại bằng cách tính trực tiếp vài giá trị đầu từ phương trình sai phân.
+\end{abstract}
+
+\vspace{0.5cm}
+
+% --- NỘI DUNG CHÍNH ---
+\section{Giới Thiệu}
+Ở Lab 4, em đã tính biến đổi Z của các tín hiệu cho trước. Bài thực hành này đi theo chiều ngược lại: từ phương trình sai phân hoặc từ $X(z)$, dùng biến đổi Z ngược để tìm lại tín hiệu trong miền thời gian. Nhờ biến đổi Z, phép tích chập trở thành phép nhân và phương trình sai phân trở thành phương trình đại số theo $z$, nên việc phân tích hệ LTI đơn giản hơn nhiều. Riêng với hệ có điều kiện đầu khác 0, cần dùng biến đổi Z một phía để đưa các giá trị $y(-1)$, $y(-2)$ vào phương trình.
+
+\section{Mục Tiêu}
+\begin{itemize}
+    \item Tìm hàm truyền $H(z)$ và đáp ứng xung $h(n)$ của hệ LTI từ phương trình sai phân.
+    \item Tính tích chập bằng cách nhân các biến đổi Z rồi lấy biến đổi Z ngược.
+    \item Hiểu vai trò của miền hội tụ (ROC): cùng một $X(z)$ có thể ứng với nhiều tín hiệu khác nhau.
+    \item Dùng biến đổi $Z^+$ để tìm đáp ứng không trạng thái $y_{zs}(n)$ và đáp ứng không ngõ vào $y_{zi}(n)$.
+    \item Chứng minh một số tính chất của biến đổi Z.
+\end{itemize}
+
+\section{Phương Pháp}
+Các bài tập đều được giải bằng tính toán giải tích theo các bước:
+\begin{enumerate}
+    \item Lấy biến đổi Z (hoặc $Z^+$) hai vế phương trình sai phân, hoặc của các tín hiệu cần tích chập, để đưa về biểu thức đại số theo $z^{-1}$.
+    \item Phân tích biểu thức thành tổng các phân thức đơn giản (khai triển phân thức tối giản).
+    \item Tra bảng các cặp biến đổi Z cơ bản để lấy biến đổi ngược, lựa chọn dạng nhân quả hay phản nhân quả theo ROC:
+    \begin{align*}
+        a^n u(n) &\zpair \frac{1}{1 - a z^{-1}}, & |z| &> |a|, \\
+        -a^n u(-n-1) &\zpair \frac{1}{1 - a z^{-1}}, & |z| &< |a|, \\
+        (n+1) a^n u(n) &\zpair \frac{1}{(1 - a z^{-1})^2}, & |z| &> |a|, \\
+        -(n+1) a^n u(-n-1) &\zpair \frac{1}{(1 - a z^{-1})^2}, & |z| &< |a|.
+    \end{align*}
+    \item Kiểm tra lại kết quả bằng cách tính trực tiếp vài giá trị đầu từ phương trình sai phân (đệ quy) hoặc bằng phép chia đa thức, rồi so sánh với công thức tìm được.
+\end{enumerate}
+
+\section{Nội Dung Thực Hành}
+
+% =====================================================================
+\subsection{Bài tập 1 -- Đáp ứng xung từ phương trình sai phân}
+\begin{mdframed}[style=exbox]
+\noindent\textbf{Bài tập 1.} Dùng biến đổi Z để tìm đáp ứng xung $h(n)$ của hệ thống được mô tả bởi phương trình sai phân
+\[
+    y(n) - y(n-2) = x(n).
+\]
+\end{mdframed}
+
+Lấy biến đổi Z hai vế:
+\[
+    Y(z) - z^{-2} Y(z) = X(z)
+    \quad\Longrightarrow\quad
+    H(z) = \frac{Y(z)}{X(z)} = \frac{1}{1 - z^{-2}} = \frac{1}{(1 - z^{-1})(1 + z^{-1})}.
+\]
+Khai triển phân thức:
+\[
+    H(z) = \frac{A}{1 - z^{-1}} + \frac{B}{1 + z^{-1}},
+    \qquad
+    A = \left.\frac{1}{1 + z^{-1}}\right|_{z^{-1} = 1} = \frac{1}{2},
+    \qquad
+    B = \left.\frac{1}{1 - z^{-1}}\right|_{z^{-1} = -1} = \frac{1}{2}.
+\]
+Hệ được mô tả bởi phương trình sai phân tính $y(n)$ từ các giá trị quá khứ nên là hệ nhân quả, ROC: $|z| > 1$. Do đó:
+\begin{equation}
+    h(n) = \frac{1}{2}\left[1 + (-1)^n\right] u(n) = \{\org{1}, 0, 1, 0, 1, 0, \dots\}.
+\end{equation}
+
+\textbf{Kiểm tra:} từ phương trình, $h(n) = h(n-2) + \delta(n)$ nên $h(0) = 1$, $h(1) = 0$, $h(2) = h(0) = 1$, $h(3) = h(1) = 0$, \dots, khớp với công thức.
+
+\textbf{Nhận xét:} hai cực $z = \pm 1$ nằm trên đường tròn đơn vị, $h(n)$ không tắt dần và $\sum |h(n)| = \infty$, nên hệ \emph{không ổn định BIBO}.
+
+% =====================================================================
+\subsection{Bài tập 2 -- Tích chập bằng biến đổi Z}
+\begin{mdframed}[style=exbox]
+\noindent\textbf{Bài tập 2.} Dùng biến đổi Z và Z ngược để tính tích chập $y(n) = x_1(n) * x_2(n)$ với:
+\begin{enumerate}
+    \item[a.] $x_1(n) = \{\org{1}, 2, 3, 4, 5\}$ và $x_2(n) = \{\org{1}, 1, 1\}$
+    \item[b.] $x_1(n) = \left(\frac{1}{5}\right)^n u(n)$ và $x_2(n) = 2^n u(n)$
+    \item[c.] $x_1(n) = n u(n)$ và $x_2(n) = 2^n u(n-1)$
+\end{enumerate}
+\end{mdframed}
+
+Áp dụng tính chất tích chập: $y(n) = x_1(n) * x_2(n) \zpair Y(z) = X_1(z) X_2(z)$, ROC chứa giao của hai ROC.
+
+\textbf{a.} Hai tín hiệu hữu hạn nên $X_1(z)$, $X_2(z)$ là các đa thức theo $z^{-1}$:
+\[
+    X_1(z) = 1 + 2z^{-1} + 3z^{-2} + 4z^{-3} + 5z^{-4},
+    \qquad
+    X_2(z) = 1 + z^{-1} + z^{-2}.
+\]
+Nhân hai đa thức:
+\[
+    Y(z) = 1 + 3z^{-1} + 6z^{-2} + 9z^{-3} + 12z^{-4} + 9z^{-5} + 5z^{-6}.
+\]
+Hệ số của $z^{-n}$ chính là $y(n)$, nên
+\begin{equation}
+    y(n) = \{\org{1}, 3, 6, 9, 12, 9, 5\}.
+\end{equation}
+
+\textbf{b.} Với $X_1(z) = \dfrac{1}{1 - 0.2 z^{-1}}$, $|z| > 0.2$ và $X_2(z) = \dfrac{1}{1 - 2 z^{-1}}$, $|z| > 2$:
+\[
+    Y(z) = \frac{1}{(1 - 0.2 z^{-1})(1 - 2 z^{-1})} = \frac{A}{1 - 0.2 z^{-1}} + \frac{B}{1 - 2 z^{-1}}, \qquad |z| > 2,
+\]
+\[
+    A = \left.\frac{1}{1 - 2 z^{-1}}\right|_{z^{-1} = 5} = -\frac{1}{9},
+    \qquad
+    B = \left.\frac{1}{1 - 0.2 z^{-1}}\right|_{z^{-1} = 0.5} = \frac{10}{9}.
+\]
+ROC $|z| > 2$ nên cả hai thành phần đều nhân quả:
+\begin{equation}
+    y(n) = \left[\frac{10}{9}\, 2^n - \frac{1}{9} \left(\frac{1}{5}\right)^n\right] u(n).
+\end{equation}
+\textbf{Kiểm tra:} $y(0) = x_1(0)x_2(0) = 1$ và $y(1) = 1 \cdot 2 + 0.2 \cdot 1 = 2.2$; công thức cho $\frac{10}{9} - \frac{1}{9} = 1$ và $\frac{20}{9} - \frac{0.2}{9} = 2.2$, khớp.
+
+\textbf{c.} Với $x_1(n) = n u(n)$:
+\[
+    X_1(z) = \frac{z^{-1}}{(1 - z^{-1})^2}, \qquad |z| > 1.
+\]
+Với $x_2(n) = 2^n u(n-1) = 2 \cdot 2^{n-1} u(n-1)$, dùng tính chất dịch thời gian:
+\[
+    X_2(z) = \frac{2 z^{-1}}{1 - 2 z^{-1}}, \qquad |z| > 2.
+\]
+Suy ra
+\[
+    Y(z) = \frac{2 z^{-2}}{(1 - z^{-1})^2 (1 - 2 z^{-1})} = \frac{A}{1 - z^{-1}} + \frac{B}{(1 - z^{-1})^2} + \frac{C}{1 - 2 z^{-1}}, \qquad |z| > 2.
+\]
+Đặt $w = z^{-1}$, các hệ số là:
+\[
+    C = \left.\frac{2w^2}{(1 - w)^2}\right|_{w = 0.5} = 2,
+    \qquad
+    B = \left.\frac{2w^2}{1 - 2w}\right|_{w = 1} = -2,
+    \qquad
+    A = Y\big|_{w=0} - B - C = 0 + 2 - 2 = 0.
+\]
+Do đó
+\begin{equation}
+    y(n) = \left[-2(n+1) + 2 \cdot 2^n\right] u(n) = 2\left(2^n - n - 1\right) u(n).
+\end{equation}
+\textbf{Kiểm tra:} tính trực tiếp $y(n) = \sum_{k} k \cdot 2^{n-k}$ với $0 \le k \le n-1$: $y(0) = y(1) = 0$, $y(2) = 1 \cdot 2 = 2$, $y(3) = 1 \cdot 4 + 2 \cdot 2 = 8$; công thức cho $0, 0, 2, 8$, khớp.
+
+% =====================================================================
+\subsection{Bài tập 3 -- Biến đổi Z ngược với các miền hội tụ}
+\begin{mdframed}[style=exbox]
+\noindent\textbf{Bài tập 3.} Tìm tất cả các tín hiệu $x(n)$ có biến đổi Z như sau:
+\[
+    X_1(z) = \frac{1}{2 - 3z^{-1} + z^{-2}},
+    \qquad
+    X_2(z) = \frac{1 + 2z^{-1} + z^{-2}}{1 + 4z^{-1} + 4z^{-2}},
+\]
+\[
+    X_3(z) = \frac{1 + z^{-1}}{(1 - 0.5z^{-1})^2 (1 - 0.3z^{-1})}, \qquad 0.3 < |z| < 0.5.
+\]
+\end{mdframed}
+
+Một biểu thức $X(z)$ ứng với bao nhiêu tín hiệu $x(n)$ là tùy vào số ROC có thể có. Các ROC này là những vành khuyên được giới hạn bởi các cực, nên với $X_1$, $X_2$ ta phải xét đủ mọi ROC.
+
+\textbf{$X_1(z)$:} viết lại
+\[
+    X_1(z) = \frac{1}{(2 - z^{-1})(1 - z^{-1})} = \frac{1/2}{(1 - 0.5z^{-1})(1 - z^{-1})} = \frac{1}{1 - z^{-1}} - \frac{1/2}{1 - 0.5z^{-1}}.
+\]
+Có hai cực $z = 0.5$ và $z = 1$, nên có 3 ROC và 3 tín hiệu tương ứng:
+\begin{itemize}
+    \item $|z| > 1$ (nhân quả): $x(n) = \left[1 - \frac{1}{2}(0.5)^n\right] u(n)$.
+    \item $0.5 < |z| < 1$ (hai phía): $x(n) = -u(-n-1) - \frac{1}{2}(0.5)^n u(n)$.
+    \item $|z| < 0.5$ (phản nhân quả): $x(n) = \left[-1 + \frac{1}{2}(0.5)^n\right] u(-n-1)$.
+\end{itemize}
+\textbf{Kiểm tra} trường hợp nhân quả bằng phép chia đa thức: $X_1(z) = 0.5 + 0.75z^{-1} + 0.875z^{-2} + \dots$, khớp với $x(0) = 0.5$, $x(1) = 0.75$, $x(2) = 0.875$.
+
+\textbf{$X_2(z)$:} tử và mẫu đều là bình phương:
+\[
+    X_2(z) = \frac{(1 + z^{-1})^2}{(1 + 2z^{-1})^2}.
+\]
+Vì $1 + z^{-1} = \frac{1}{2}(1 + 2z^{-1}) + \frac{1}{2}$, nên $\dfrac{1 + z^{-1}}{1 + 2z^{-1}} = \dfrac{1}{2} + \dfrac{1/2}{1 + 2z^{-1}}$. Bình phương lên:
+\[
+    X_2(z) = \frac{1}{4} + \frac{1/2}{1 + 2z^{-1}} + \frac{1/4}{(1 + 2z^{-1})^2}.
+\]
+Có một cực kép tại $z = -2$, nên có 2 ROC:
+\begin{itemize}
+    \item $|z| > 2$ (nhân quả): $x(n) = \frac{1}{4}\delta(n) + \frac{1}{2}(-2)^n u(n) + \frac{1}{4}(n+1)(-2)^n u(n)$.
+    \item $|z| < 2$ (phản nhân quả): $x(n) = \frac{1}{4}\delta(n) - \frac{1}{2}(-2)^n u(-n-1) - \frac{1}{4}(n+1)(-2)^n u(-n-1)$.
+\end{itemize}
+\textbf{Kiểm tra} trường hợp nhân quả bằng phép chia đa thức: $X_2(z) = 1 - 2z^{-1} + 5z^{-2} - 12z^{-3} + \dots$; công thức cho $x(0) = \frac{1}{4} + \frac{1}{2} + \frac{1}{4} = 1$, $x(1) = -1 - 1 = -2$, $x(2) = 2 + 3 = 5$, khớp.
+
+\textbf{$X_3(z)$:} khai triển phân thức với cực kép tại $0.5$ và cực đơn tại $0.3$:
+\[
+    X_3(z) = \frac{A}{1 - 0.5z^{-1}} + \frac{B}{(1 - 0.5z^{-1})^2} + \frac{C}{1 - 0.3z^{-1}}.
+\]
+Đặt $w = z^{-1}$:
+\[
+    C = \left.\frac{1 + w}{(1 - 0.5w)^2}\right|_{w = 10/3} = 9.75,
+    \qquad
+    B = \left.\frac{1 + w}{1 - 0.3w}\right|_{w = 2} = 7.5,
+\]
+\[
+    A = X_3\big|_{w=0} - B - C = 1 - 7.5 - 9.75 = -16.25.
+\]
+ROC $0.3 < |z| < 0.5$ cho biết cực $0.3$ nằm phía trong (thành phần nhân quả), còn cực $0.5$ nằm phía ngoài (thành phần phản nhân quả). Do đó chỉ có một tín hiệu:
+\begin{equation}
+    x(n) = 9.75\,(0.3)^n u(n) + 16.25\,(0.5)^n u(-n-1) - 7.5\,(n+1)(0.5)^n u(-n-1).
+\end{equation}
+
+% =====================================================================
+\subsection{Bài tập 4 -- Hệ bậc một}
+\begin{mdframed}[style=exbox]
+\noindent\textbf{Bài tập 4.} Cho hệ LTI mô tả bởi phương trình sai phân
+\[
+    y(n) = 0.7 y(n-1) + x(n).
+\]
+\begin{enumerate}
+    \item[a.] Vẽ sơ đồ khối của hệ.
+    \item[b.] Xác định $h(n)$.
+    \item[c.] Xác định $y(n)$ khi $x(n) = u(n)$.
+\end{enumerate}
+\end{mdframed}
+
+\textbf{a. Sơ đồ khối:} hệ gồm một bộ cộng, một khâu trễ $z^{-1}$ và một hệ số nhân $0.7$ hồi tiếp ngõ ra về bộ cộng.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node (x) at (0, 0) {$x(n)$};
+        \node[sum] (s) at (2.2, 0) {$+$};
+        \node[dot] (t) at (6, 0) {};
+        \node (y) at (8, 0) {$y(n)$};
+        \node[block] (d) at (6, -1.8) {$z^{-1}$};
+        \node[gain] (g) at (3.1, -1.8) {$0.7$};
+        \draw[->] (x) -- (s);
+        \draw[->] (s) -- (y);
+        \draw[->] (t) -- (d);
+        \draw[->] (d) -- node[below] {\small $y(n-1)$} (g);
+        \draw[->] (g) -| (s);
+    \end{tikzpicture}
+    \caption{Sơ đồ khối của hệ $y(n) = 0.7y(n-1) + x(n)$}
+\end{figure}
+
+\textbf{b. Đáp ứng xung:} lấy biến đổi Z hai vế:
+\[
+    Y(z) = 0.7 z^{-1} Y(z) + X(z)
+    \quad\Longrightarrow\quad
+    H(z) = \frac{1}{1 - 0.7z^{-1}}, \qquad |z| > 0.7.
+\]
+\begin{equation}
+    h(n) = (0.7)^n u(n).
+\end{equation}
+Cực $0.7$ nằm trong đường tròn đơn vị nên hệ ổn định.
+
+\textbf{c. Đáp ứng bước:} với $X(z) = \dfrac{1}{1 - z^{-1}}$, $|z| > 1$:
+\[
+    Y(z) = \frac{1}{(1 - 0.7z^{-1})(1 - z^{-1})} = \frac{A}{1 - 0.7z^{-1}} + \frac{B}{1 - z^{-1}},
+\]
+\[
+    A = \left.\frac{1}{1 - z^{-1}}\right|_{z^{-1} = 1/0.7} = -\frac{7}{3},
+    \qquad
+    B = \left.\frac{1}{1 - 0.7z^{-1}}\right|_{z^{-1} = 1} = \frac{10}{3}.
+\]
+\begin{equation}
+    y(n) = \left[\frac{10}{3} - \frac{7}{3}(0.7)^n\right] u(n).
+\end{equation}
+
+\textbf{Kiểm tra:} tính đệ quy từ phương trình với $y(-1) = 0$:
+\begin{table}[H]
+\centering
+\begin{tabular}{l|cccccc}
+\toprule
+$n$ & 0 & 1 & 2 & 3 & 4 & 5 \\
+\midrule
+Tính đệ quy & 1 & 1.7 & 2.19 & 2.533 & 2.7731 & 2.9412 \\
+Tính bằng công thức & 1 & 1.7 & 2.19 & 2.533 & 2.7731 & 2.9412 \\
+\bottomrule
+\end{tabular}
+\caption{So sánh đáp ứng bước tính đệ quy và tính bằng công thức}
+\end{table}
+\noindent Khi $n \to \infty$, $(0.7)^n \to 0$ nên $y(n) \to \frac{10}{3} = H(1)$, đúng với giá trị xác lập của đáp ứng bước.
+
+% =====================================================================
+\subsection{Bài tập 5 -- Hệ bậc hai với điều kiện đầu}
+\begin{mdframed}[style=exbox]
+\noindent\textbf{Bài tập 5.} Cho hệ LTI mô tả bởi phương trình sai phân
+\[
+    y(n) = 2y(n-1) - 3y(n-2) + x(n) + x(n-1).
+\]
+\begin{enumerate}
+    \item[a.] Vẽ sơ đồ khối của hệ.
+    \item[b.] Xác định đáp ứng xung $h(n)$.
+    \item[c.] Xác định $y_{zi}(n)$ khi $y(-1) = y(-2) = 1$.
+    \item[d.] Xác định $y_{zs}(n)$ khi $x(n) = 2^n u(n)$.
+\end{enumerate}
+\end{mdframed}
+
+\textbf{a. Sơ đồ khối} (dạng trực tiếp I): nhánh bên trái tạo $x(n) + x(n-1)$, nhánh bên phải hồi tiếp $2y(n-1) - 3y(n-2)$.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}
+        \node (x) at (0, 0) {$x(n)$};
+        \node[dot] (t1) at (1.2, 0) {};
+        \node[sum] (s1) at (3.2, 0) {$+$};
+        \node[sum] (s2) at (5.6, 0) {$+$};
+        \node[dot] (t2) at (9.6, 0) {};
+        \node (y) at (11.4, 0) {$y(n)$};
+        \node[block] (d1) at (1.2, -1.8) {$z^{-1}$};
+        \node[block] (d2) at (9.6, -1.8) {$z^{-1}$};
+        \node[block] (d3) at (9.6, -4.0) {$z^{-1}$};
+        \node[gain] (g1) at (6.7, -1.8) {$2$};
+        \node[gain] (g2) at (6.7, -4.0) {$-3$};
+        \node[sum] (s3) at (5.6, -1.8) {$+$};
+        \draw[->] (x) -- (s1);
+        \draw[->] (t1) -- (d1);
+        \draw (d1) |- node[pos=0.75, below] {\small $x(n-1)$} (3.2, -2.8);
+        \draw[->] (3.2, -2.8) -- (s1);
+        \draw[->] (s1) -- (s2);
+        \draw[->] (s2) -- (y);
+        \draw[->] (t2) -- (d2);
+        \draw[->] (d2) -- node[right] {\small $y(n-1)$} (d3);
+        \draw[->] (d2) -- (g1);
+        \draw[->] (g1) -- (s3);
+        \draw[->] (d3) -- node[below] {\small $y(n-2)$} (g2);
+        \draw[->] (g2) -| (s3);
+        \draw[->] (s3) -- (s2);
+    \end{tikzpicture}
+    \caption{Sơ đồ khối của hệ $y(n) = 2y(n-1) - 3y(n-2) + x(n) + x(n-1)$}
+\end{figure}
+
+\textbf{b. Đáp ứng xung:} lấy biến đổi Z hai vế (điều kiện đầu bằng 0):
+\[
+    H(z) = \frac{1 + z^{-1}}{1 - 2z^{-1} + 3z^{-2}}.
+\]
+Mẫu số có nghiệm $z^2 - 2z + 3 = 0 \Rightarrow z = 1 \pm j\sqrt{2}$, là cặp cực phức liên hợp với
+\[
+    r = |p| = \sqrt{3}, \qquad \theta = \arctan\sqrt{2} \approx 54.74^\circ, \qquad r\cos\theta = 1, \qquad r\sin\theta = \sqrt{2}.
+\]
+Khi đó mẫu số có dạng $1 - 2r\cos\theta\, z^{-1} + r^2 z^{-2}$. Ta dùng hai cặp biến đổi:
+\begin{align*}
+    r^n \cos(n\theta)\, u(n) &\zpair \frac{1 - r\cos\theta\, z^{-1}}{1 - 2r\cos\theta\, z^{-1} + r^2 z^{-2}}, \\
+    r^n \sin(n\theta)\, u(n) &\zpair \frac{r\sin\theta\, z^{-1}}{1 - 2r\cos\theta\, z^{-1} + r^2 z^{-2}}.
+\end{align*}
+Tách tử số theo hai dạng trên: $1 + z^{-1} = (1 - z^{-1}) + \sqrt{2} \cdot \left(\sqrt{2}\, z^{-1}\right)$. Hệ nhân quả nên ROC $|z| > \sqrt{3}$, suy ra
+\begin{equation}
+    h(n) = (\sqrt{3})^n \left[\cos(n\theta) + \sqrt{2}\sin(n\theta)\right] u(n), \qquad \theta = \arctan\sqrt{2}.
+\end{equation}
+Vì $|p| = \sqrt{3} > 1$, cực nằm ngoài đường tròn đơn vị nên hệ \emph{không ổn định}: $h(n)$ dao động với biên độ tăng dần.
+
+\textbf{c. Đáp ứng không ngõ vào $y_{zi}(n)$:} cho $x(n) = 0$ và dùng biến đổi $Z^+$ với tính chất dịch có điều kiện đầu:
+\[
+    Z^+\{y(n-1)\} = z^{-1}Y^+(z) + y(-1),
+    \qquad
+    Z^+\{y(n-2)\} = z^{-2}Y^+(z) + z^{-1}y(-1) + y(-2).
+\]
+Thay vào phương trình $y(n) - 2y(n-1) + 3y(n-2) = 0$ với $y(-1) = y(-2) = 1$:
+\[
+    Y^+(z) - 2\left[z^{-1}Y^+(z) + 1\right] + 3\left[z^{-2}Y^+(z) + z^{-1} + 1\right] = 0
+\]
+\[
+    \Longrightarrow\quad
+    Y_{zi}(z) = \frac{-1 - 3z^{-1}}{1 - 2z^{-1} + 3z^{-2}}.
+\]
+Tách tử số: $-1 - 3z^{-1} = -(1 - z^{-1}) - 2\sqrt{2} \cdot \left(\sqrt{2}\, z^{-1}\right)$, nên
+\begin{equation}
+    y_{zi}(n) = -(\sqrt{3})^n \left[\cos(n\theta) + 2\sqrt{2}\sin(n\theta)\right], \qquad n \ge 0.
+\end{equation}
+
+\textbf{d. Đáp ứng không trạng thái $y_{zs}(n)$:} với $X(z) = \dfrac{1}{1 - 2z^{-1}}$:
+\[
+    Y_{zs}(z) = \frac{1 + z^{-1}}{(1 - 2z^{-1})(1 - 2z^{-1} + 3z^{-2})} = \frac{K}{1 - 2z^{-1}} + \frac{a + bz^{-1}}{1 - 2z^{-1} + 3z^{-2}}.
+\]
+Hệ số $K = \left.\dfrac{1 + w}{1 - 2w + 3w^2}\right|_{w = 0.5} = \dfrac{1.5}{0.75} = 2$. Đồng nhất hệ số hai vế của $1 + w = 2(1 - 2w + 3w^2) + (a + bw)(1 - 2w)$ được $a = -1$, $b = 3$. Tách $-1 + 3z^{-1} = -(1 - z^{-1}) + \sqrt{2} \cdot \left(\sqrt{2}\, z^{-1}\right)$, suy ra
+\begin{equation}
+    y_{zs}(n) = \left[2^{n+1} - (\sqrt{3})^n \left(\cos(n\theta) - \sqrt{2}\sin(n\theta)\right)\right] u(n).
+\end{equation}
+
+\textbf{Kiểm tra:} tính đệ quy trực tiếp từ phương trình sai phân và so với công thức:
+\begin{table}[H]
+\centering
+\begin{tabular}{c|cccccc}
+\toprule
+$n$ & 0 & 1 & 2 & 3 & 4 & 5 \\
+\midrule
+$h(n)$ (đệ quy và công thức) & 1 & 3 & 3 & $-3$ & $-15$ & $-21$ \\
+$y_{zi}(n)$ (đệ quy và công thức) & $-1$ & $-5$ & $-7$ & 1 & 23 & 43 \\
+$y_{zs}(n)$ (đệ quy và công thức) & 1 & 5 & 13 & 23 & 31 & 41 \\
+\bottomrule
+\end{tabular}
+\caption{Các giá trị đầu của $h(n)$, $y_{zi}(n)$, $y_{zs}(n)$: tính đệ quy và tính bằng công thức cho cùng kết quả}
+\end{table}
+\noindent Ví dụ với $y_{zi}$: $y(0) = 2y(-1) - 3y(-2) = 2 - 3 = -1$, $y(1) = 2y(0) - 3y(-1) = -2 - 3 = -5$; công thức cho $y_{zi}(0) = -1$ và $y_{zi}(1) = -\sqrt{3}\left(\frac{1}{\sqrt{3}} + 2\sqrt{2} \cdot \frac{\sqrt{2}}{\sqrt{3}}\right) = -1 - 4 = -5$, khớp.
+
+% =====================================================================
+\subsection{Bài tập 6 -- Chứng minh các tính chất của biến đổi Z}
+\begin{mdframed}[style=exbox]
+\noindent\textbf{Bài tập 6.} Cho $x(n) \zpair X(z)$. Chứng minh:
+\begin{itemize}
+    \item $Z[x^*(n)] = X^*(z^*)$
+    \item $Z\{\operatorname{Re}[x(n)]\} = \frac{1}{2}\left[X(z) + X^*(z^*)\right]$
+    \item $Z\{\operatorname{Im}[x(n)]\} = \frac{1}{2j}\left[X(z) - X^*(z^*)\right]$
+    \item $Z\{e^{j\omega_0 n} x(n)\} = X(z e^{-j\omega_0})$
+\end{itemize}
+\end{mdframed}
+
+Các chứng minh đều xuất phát từ định nghĩa $X(z) = \sum_{n=-\infty}^{\infty} x(n) z^{-n}$.
+
+\textbf{1. Tính chất liên hợp phức.}
+\[
+    Z[x^*(n)] = \sum_{n} x^*(n) z^{-n} = \sum_{n} \left[x(n) (z^*)^{-n}\right]^* = \left[\sum_{n} x(n) (z^*)^{-n}\right]^* = X^*(z^*).
+\]
+Ở bước thứ hai, em dùng $\left[(z^*)^{-n}\right]^* = z^{-n}$. Vì $|z^*| = |z|$ nên ROC không đổi.
+
+\textbf{2. Phần thực.} Do $\operatorname{Re}[x(n)] = \frac{1}{2}\left[x(n) + x^*(n)\right]$, áp dụng tính tuyến tính và tính chất 1:
+\[
+    Z\{\operatorname{Re}[x(n)]\} = \frac{1}{2}\left[Z\{x(n)\} + Z\{x^*(n)\}\right] = \frac{1}{2}\left[X(z) + X^*(z^*)\right].
+\]
+
+\textbf{3. Phần ảo.} Do $\operatorname{Im}[x(n)] = \frac{1}{2j}\left[x(n) - x^*(n)\right]$, tương tự:
+\[
+    Z\{\operatorname{Im}[x(n)]\} = \frac{1}{2j}\left[X(z) - X^*(z^*)\right].
+\]
+
+\textbf{4. Nhân với hàm mũ phức (điều chế).}
+\[
+    Z\{e^{j\omega_0 n} x(n)\} = \sum_{n} e^{j\omega_0 n} x(n) z^{-n} = \sum_{n} x(n) \left(z e^{-j\omega_0}\right)^{-n} = X(z e^{-j\omega_0}).
+\]
+Vì $|z e^{-j\omega_0}| = |z|$ nên ROC cũng không đổi. Về ý nghĩa, phép nhân với $e^{j\omega_0 n}$ làm quay các cực và không điểm một góc $\omega_0$ trong mặt phẳng $z$, tương ứng với dịch phổ đi $\omega_0$ trong miền tần số.
+
+\section{Bàn Luận}
+Qua bài thực hành, em thấy biến đổi Z giúp giải các bài toán trong miền thời gian gọn hơn nhiều: tích chập trở thành phép nhân, phương trình sai phân trở thành phương trình đại số, và mọi bài đều quy về khai triển phân thức rồi tra bảng. Bài 3 cho thấy rõ vai trò của ROC: cùng một biểu thức $X(z)$ nhưng mỗi ROC lại ứng với một tín hiệu khác nhau (nhân quả, phản nhân quả hoặc hai phía), nên khi tìm biến đổi ngược bắt buộc phải xét ROC. Ở Bài 5, cặp cực phức có $|p| = \sqrt{3} > 1$ làm hệ không ổn định, còn biến đổi $Z^+$ giúp đưa điều kiện đầu vào để tách riêng $y_{zi}$ và $y_{zs}$. Phần khó nhất với em là xử lý cực kép và cực phức; để tránh sai sót, em đã kiểm tra mọi kết quả bằng cách tính đệ quy vài giá trị đầu từ phương trình sai phân, và tất cả đều khớp.
+
+\section{Tài Liệu Tham Khảo}
+Đường link GitHub chứa mã nguồn thực hành source code SciLab: \url{https://github.com/qanetta/DigitalSignalProcessing-Lab.git}
+
+\end{document}
