@@ -77,7 +77,7 @@
 
 % --- PHẦN TỔNG QUAN ---
 \begin{abstract}
-\noindent\textbf{Tổng Quan:} Bài thực hành 5 sử dụng biến đổi Z, biến đổi Z một phía ($Z^+$) và biến đổi Z ngược để tìm đáp ứng xung, tính tích chập, tìm tín hiệu ứng với từng miền hội tụ và phân tích đáp ứng của hệ LTI có điều kiện đầu. Mọi kết quả giải tích đều được kiểm tra lại bằng cách tính trực tiếp vài giá trị đầu từ phương trình sai phân.
+\noindent\textbf{Tổng Quan:} Bài thực hành 5 sử dụng biến đổi Z, biến đổi Z một phía ($Z^+$) và biến đổi Z ngược để tìm đáp ứng xung, tính tích chập, tìm tín hiệu ứng với từng miền hội tụ và phân tích đáp ứng của hệ LTI có điều kiện đầu, kèm 8 bài tập bổ sung ở Chương 3 của tài liệu tham khảo. Mọi kết quả giải tích đều được kiểm tra lại bằng cách tính trực tiếp vài giá trị đầu từ phương trình sai phân.
 \end{abstract}
 
 \vspace{0.5cm}
@@ -492,6 +492,328 @@ Các chứng minh đều xuất phát từ định nghĩa $X(z) = \sum_{n=-\inft
     Z\{e^{j\omega_0 n} x(n)\} = \sum_{n} e^{j\omega_0 n} x(n) z^{-n} = \sum_{n} x(n) \left(z e^{-j\omega_0}\right)^{-n} = X(z e^{-j\omega_0}).
 \]
 Vì $|z e^{-j\omega_0}| = |z|$ nên ROC cũng không đổi. Về ý nghĩa, phép nhân với $e^{j\omega_0 n}$ làm quay các cực và không điểm một góc $\omega_0$ trong mặt phẳng $z$, tương ứng với dịch phổ đi $\omega_0$ trong miền tần số.
+
+% =====================================================================
+\subsection{Bài tập bổ sung}
+Phần này giải các bài 3.3, 3.4, 3.7, 3.8, 3.13, 3.14, 3.19 và 3.20 ở cuối Chương 3 của tài liệu tham khảo. Tương tự các bài trên, những kết quả có dạng nhân quả đều được em kiểm tra lại bằng phép chia đa thức (khai triển $X(z)$ thành chuỗi lũy thừa theo $z^{-1}$) và so với vài giá trị đầu của công thức.
+
+% ---------------------------------------------------------------------
+\needspace{8\baselineskip}
+\subsubsection*{Bài 3.3}
+\begin{mdframed}[style=exbox]
+Xác định biến đổi Z và vẽ ROC của các tín hiệu:
+(a) $x_1(n) = \left(\frac{1}{3}\right)^n$ với $n \ge 0$, $x_1(n) = \left(\frac{1}{2}\right)^{-n}$ với $n < 0$;
+(b) $x_2(n) = \left(\frac{1}{3}\right)^n - 2^n$ với $n \ge 0$, $x_2(n) = 0$ với $n < 0$;
+(c) $x_3(n) = x_1(n+4)$;
+(d) $x_4(n) = x_1(-n)$.
+\end{mdframed}
+
+\textbf{(a)} Với $n < 0$, $\left(\frac{1}{2}\right)^{-n} = 2^n$, nên $x_1(n)$ là tín hiệu hai phía:
+\[
+    X_1(z) = \sum_{n=0}^{\infty} \left(\tfrac{1}{3}z^{-1}\right)^n + \sum_{m=1}^{\infty} \left(\tfrac{z}{2}\right)^m
+    = \frac{1}{1 - \frac{1}{3}z^{-1}} - \frac{1}{1 - 2z^{-1}}
+    = \frac{-\frac{5}{3}z^{-1}}{\left(1 - \frac{1}{3}z^{-1}\right)(1 - 2z^{-1})}.
+\]
+Tổng thứ nhất hội tụ khi $|z| > \frac{1}{3}$, tổng thứ hai hội tụ khi $|z| < 2$, nên ROC: $\frac{1}{3} < |z| < 2$.
+
+\textbf{(b)} Cả hai thành phần đều nhân quả:
+\[
+    X_2(z) = \frac{1}{1 - \frac{1}{3}z^{-1}} - \frac{1}{1 - 2z^{-1}}, \qquad \text{ROC: } |z| > 2.
+\]
+Đáng chú ý là $X_2(z)$ có \emph{cùng biểu thức} với $X_1(z)$, chỉ khác ROC. Điều này minh họa lại kết luận của Bài tập 3: biểu thức $X(z)$ phải đi kèm ROC thì mới xác định được tín hiệu.
+
+\textbf{(c)} Theo tính chất dịch thời gian, $x_1(n + 4) \zpair z^4 X_1(z)$:
+\[
+    X_3(z) = z^4 X_1(z) = \frac{z^4}{1 - \frac{1}{3}z^{-1}} - \frac{z^4}{1 - 2z^{-1}}, \qquad \text{ROC: } \tfrac{1}{3} < |z| < 2.
+\]
+
+\textbf{(d)} Theo tính chất đảo thời gian, $x_1(-n) \zpair X_1(z^{-1})$, ROC là nghịch đảo của ROC cũ:
+\[
+    X_4(z) = \frac{1}{1 - \frac{1}{3}z} - \frac{1}{1 - 2z}, \qquad \tfrac{1}{3} < |z^{-1}| < 2 \iff \tfrac{1}{2} < |z| < 3.
+\]
+
+\begin{figure}[H]
+    \centering
+    \newcommand{\rocaxes}{\draw[->] (-1.9,0) -- (1.9,0) node[right] {\scriptsize Re}; \draw[->] (0,-1.9) -- (0,1.9) node[above] {\scriptsize Im};}
+    \begin{tikzpicture}[scale=0.85]
+        \fill[black!15, even odd rule] (0,0) circle (1.4) (0,0) circle (0.25);
+        \draw[dashed] (0,0) circle (1.4); \draw[dashed] (0,0) circle (0.25);
+        \rocaxes
+        \node[below right] at (1.4,0) {\scriptsize 2};
+        \node at (0,-2.3) {\small (a), (c): $\frac{1}{3} < |z| < 2$};
+    \end{tikzpicture}
+    \hspace{0.5cm}
+    \begin{tikzpicture}[scale=0.85]
+        \fill[black!15, even odd rule] (-1.8,-1.8) rectangle (1.8,1.8) (0,0) circle (1.4);
+        \draw[dashed] (0,0) circle (1.4);
+        \rocaxes
+        \node[below right] at (1.4,0) {\scriptsize 2};
+        \node at (0,-2.3) {\small (b): $|z| > 2$};
+    \end{tikzpicture}
+    \hspace{0.5cm}
+    \begin{tikzpicture}[scale=0.85]
+        \fill[black!15, even odd rule] (0,0) circle (1.6) (0,0) circle (0.45);
+        \draw[dashed] (0,0) circle (1.6); \draw[dashed] (0,0) circle (0.45);
+        \rocaxes
+        \node[below right] at (1.6,0) {\scriptsize 3};
+        \node at (0,-2.3) {\small (d): $\frac{1}{2} < |z| < 3$};
+    \end{tikzpicture}
+    \caption{Miền hội tụ (phần tô xám) của các tín hiệu trong Bài 3.3 (hình vẽ minh họa, không theo đúng tỉ lệ)}
+\end{figure}
+
+% ---------------------------------------------------------------------
+\needspace{8\baselineskip}
+\subsubsection*{Bài 3.4}
+\begin{mdframed}[style=exbox]
+Xác định biến đổi Z của các tín hiệu:
+(a) $n(-1)^n u(n)$; (b) $n^2 u(n)$; (c) $-n a^n u(-n-1)$; (d) $(-1)^n \cos\left(\frac{\pi}{3}n\right) u(n)$; (e) $(-1)^n u(n)$; \\
+(f) $x(n) = \{\org{1}, 0, -1, 0, 1, -1, \dots\}$.
+\end{mdframed}
+
+Các câu dùng tính chất đạo hàm trong miền $z$: $n\,x(n) \zpair -z\,\dfrac{dX(z)}{dz}$, và tính chất nhân với $a^n$: $a^n x(n) \zpair X(z/a)$.
+
+\textbf{(a)} Từ $(-1)^n u(n) \zpair \frac{1}{1 + z^{-1}}$ và $n a^n u(n) \zpair \frac{a z^{-1}}{(1 - a z^{-1})^2}$ với $a = -1$:
+\[
+    X(z) = \frac{-z^{-1}}{(1 + z^{-1})^2}, \qquad |z| > 1.
+\]
+
+\textbf{(b)} Từ $n u(n) \zpair \frac{z^{-1}}{(1 - z^{-1})^2}$, áp dụng thêm một lần đạo hàm:
+\[
+    X(z) = -z \frac{d}{dz}\left[\frac{z^{-1}}{(1 - z^{-1})^2}\right] = \frac{z^{-1}(1 + z^{-1})}{(1 - z^{-1})^3}, \qquad |z| > 1.
+\]
+
+\textbf{(c)} Từ $-a^n u(-n-1) \zpair \frac{1}{1 - a z^{-1}}$ với $|z| < |a|$, nhân thêm $n$:
+\[
+    X(z) = -z \frac{d}{dz}\left[\frac{1}{1 - a z^{-1}}\right] = \frac{a z^{-1}}{(1 - a z^{-1})^2}, \qquad |z| < |a|.
+\]
+
+\textbf{(d)} Với $\omega_0 = \frac{\pi}{3}$, $\cos\omega_0 = \frac{1}{2}$: $\cos(\omega_0 n) u(n) \zpair \frac{1 - \frac{1}{2}z^{-1}}{1 - z^{-1} + z^{-2}}$. Nhân với $(-1)^n$ tương đương thay $z$ bằng $-z$:
+\[
+    X(z) = \frac{1 + \frac{1}{2}z^{-1}}{1 + z^{-1} + z^{-2}}, \qquad |z| > 1.
+\]
+
+\textbf{(e)}
+\[
+    X(z) = \frac{1}{1 + z^{-1}}, \qquad |z| > 1.
+\]
+
+\textbf{(f)} Dãy được hiểu là tuần hoàn chu kỳ 4 theo mẫu $1, 0, -1, 0$ (tức $x(n) = \cos\left(\frac{\pi}{2}n\right)u(n)$; số $-1$ ngay sau số $1$ thứ hai trong đề nhiều khả năng là lỗi in, vì không khớp với mẫu lặp). Khi đó:
+\[
+    X(z) = 1 - z^{-2} + z^{-4} - z^{-6} + \dots = \frac{1}{1 + z^{-2}}, \qquad |z| > 1.
+\]
+
+% ---------------------------------------------------------------------
+\needspace{8\baselineskip}
+\subsubsection*{Bài 3.7}
+\begin{mdframed}[style=exbox]
+Tính tích chập của $x_1(n)$ (giống Bài 3.3a) và $x_2(n) = \left(\frac{1}{2}\right)^n u(n)$ bằng biến đổi Z.
+\end{mdframed}
+
+Từ Bài 3.3: $X_1(z) = \dfrac{-\frac{5}{3}z^{-1}}{\left(1 - \frac{1}{3}z^{-1}\right)(1 - 2z^{-1})}$, $\frac{1}{3} < |z| < 2$; và $X_2(z) = \dfrac{1}{1 - \frac{1}{2}z^{-1}}$, $|z| > \frac{1}{2}$. Do đó
+\[
+    Y(z) = \frac{-\frac{5}{3}z^{-1}}{\left(1 - \frac{1}{3}z^{-1}\right)\left(1 - \frac{1}{2}z^{-1}\right)(1 - 2z^{-1})}
+    = \frac{A}{1 - \frac{1}{3}z^{-1}} + \frac{B}{1 - \frac{1}{2}z^{-1}} + \frac{C}{1 - 2z^{-1}},
+\]
+với ROC là giao của hai ROC: $\frac{1}{2} < |z| < 2$. Tính các hệ số:
+\[
+    A = -2, \qquad B = \frac{10}{3}, \qquad C = -\frac{4}{3}.
+\]
+Hai cực $\frac{1}{3}$, $\frac{1}{2}$ nằm trong ROC (thành phần nhân quả), còn cực $2$ nằm ngoài (thành phần phản nhân quả):
+\begin{equation}
+    y(n) = \left[-2\left(\tfrac{1}{3}\right)^n + \tfrac{10}{3}\left(\tfrac{1}{2}\right)^n\right] u(n) + \tfrac{4}{3}\, 2^n u(-n-1).
+\end{equation}
+\textbf{Kiểm tra:} tính trực tiếp tổng tích chập $y(n) = \sum_{k \le n} x_1(k)\left(\frac{1}{2}\right)^{n-k}$ cho $y(-1) = 0.6667$, $y(0) = 1$, $y(1) = 0.6111$, trùng với công thức.
+
+% ---------------------------------------------------------------------
+\needspace{8\baselineskip}
+\subsubsection*{Bài 3.8}
+\begin{mdframed}[style=exbox]
+Dùng tính chất tích chập để: (a) biểu diễn biến đổi Z của $y(n) = \sum_{k=-\infty}^{n} x(k)$ theo $X(z)$; (b) xác định biến đổi Z của $x(n) = (n+1)u(n)$.
+\end{mdframed}
+
+\textbf{(a)} Ta có $y(n) = \sum_{k=-\infty}^{n} x(k) = \sum_{k} x(k)\, u(n-k) = x(n) * u(n)$, nên
+\[
+    Y(z) = X(z) \cdot \frac{1}{1 - z^{-1}}, \qquad \text{ROC chứa } R_x \cap \{|z| > 1\}.
+\]
+
+\textbf{(b)} Ta có $u(n) * u(n) = \sum_{k} u(k)u(n-k) = \sum_{k=0}^{n} 1 = (n+1)$ với $n \ge 0$, tức $x(n) = u(n) * u(n)$. Do đó
+\[
+    X(z) = \frac{1}{(1 - z^{-1})^2}, \qquad |z| > 1.
+\]
+
+% ---------------------------------------------------------------------
+\needspace{8\baselineskip}
+\subsubsection*{Bài 3.13}
+\begin{mdframed}[style=exbox]
+Cho $x(n) \zpair X(z)$. Biểu diễn theo $X(z)$ biến đổi Z của: (a) $x_1(n) = x\left(\frac{n}{2}\right)$ khi $n$ chẵn, $0$ khi $n$ lẻ; (b) $x_2(n) = x(2n)$.
+\end{mdframed}
+
+\textbf{(a)} Chỉ các chỉ số chẵn $n = 2m$ có giá trị:
+\[
+    X_1(z) = \sum_{m} x(m) z^{-2m} = X(z^2), \qquad \text{ROC: } \{z : z^2 \in R_x\}.
+\]
+
+\textbf{(b)} Dùng tính chất $\frac{1 + (-1)^m}{2}$ bằng 1 khi $m$ chẵn và bằng 0 khi $m$ lẻ:
+\[
+    \frac{1}{2}\left[X\left(z^{1/2}\right) + X\left(-z^{1/2}\right)\right]
+    = \sum_{m} x(m)\, \frac{1 + (-1)^m}{2}\, z^{-m/2}
+    = \sum_{n} x(2n) z^{-n}.
+\]
+Vậy
+\[
+    X_2(z) = \frac{1}{2}\left[X\left(z^{1/2}\right) + X\left(-z^{1/2}\right)\right].
+\]
+
+% ---------------------------------------------------------------------
+\needspace{8\baselineskip}
+\subsubsection*{Bài 3.14}
+\begin{mdframed}[style=exbox]
+Xác định tín hiệu nhân quả $x(n)$ có biến đổi Z là:
+(a) $\frac{1 + 3z^{-1}}{1 + 3z^{-1} + 2z^{-2}}$;
+(b) $\frac{1}{1 - z^{-1} + \frac{1}{2}z^{-2}}$;
+(c) $\frac{z^{-6} + z^{-7}}{1 - z^{-1}}$;
+(d) $\frac{1 + 2z^{-2}}{1 + z^{-2}}$;
+(e) $\frac{1}{4}\cdot\frac{1 + 6z^{-1} + z^{-2}}{(1 - 2z^{-1} + 2z^{-2})(1 - 0.5z^{-1})}$;
+(f) $\frac{2 - 1.5z^{-1}}{1 - 1.5z^{-1} + 0.5z^{-2}}$;
+(g) $\frac{1 + 2z^{-1} + z^{-2}}{1 + 4z^{-1} + 4z^{-2}}$;
+(h) theo giản đồ cực--không ở Hình P3.14, $G = \frac{1}{4}$;
+(i) $\frac{1 - \frac{1}{2}z^{-1}}{1 + \frac{1}{2}z^{-1}}$;
+(j) $\frac{1 - a z^{-1}}{z^{-1} - a}$.
+\end{mdframed}
+
+Vì tìm tín hiệu nhân quả nên mọi thành phần đều lấy dạng nhân quả. Với cặp cực phức $r e^{\pm j\theta}$, em tách tử số theo hai dạng chuẩn $1 - r\cos\theta\, z^{-1}$ và $r\sin\theta\, z^{-1}$ như ở Bài tập 5.
+
+\textbf{(a)} $\dfrac{1 + 3z^{-1}}{(1 + z^{-1})(1 + 2z^{-1})} = \dfrac{2}{1 + z^{-1}} - \dfrac{1}{1 + 2z^{-1}}$, nên $x(n) = \left[2(-1)^n - (-2)^n\right] u(n)$.
+
+\textbf{(b)} Cặp cực $\frac{1}{2} \pm j\frac{1}{2} = \frac{1}{\sqrt{2}} e^{\pm j\pi/4}$, có $r\cos\theta = r\sin\theta = \frac{1}{2}$. Tách $1 = \left(1 - \frac{1}{2}z^{-1}\right) + \frac{1}{2}z^{-1}$:
+\[
+    x(n) = \left(\tfrac{1}{\sqrt{2}}\right)^n \left[\cos\tfrac{\pi n}{4} + \sin\tfrac{\pi n}{4}\right] u(n).
+\]
+
+\textbf{(c)} $\dfrac{1 + z^{-1}}{1 - z^{-1}} = 1 + \dfrac{2z^{-1}}{1 - z^{-1}} \zpair \delta(n) + 2u(n-1)$. Nhân thêm $z^{-6}$ (trễ 6 mẫu): $x(n) = \delta(n-6) + 2u(n-7)$.
+
+\textbf{(d)} $\dfrac{1 + 2z^{-2}}{1 + z^{-2}} = 2 - \dfrac{1}{1 + z^{-2}}$, mà $\dfrac{1}{1 + z^{-2}} \zpair \cos\left(\frac{\pi n}{2}\right)u(n)$, nên
+\[
+    x(n) = 2\delta(n) - \cos\left(\tfrac{\pi n}{2}\right) u(n).
+\]
+
+\textbf{(e)} Cặp cực $1 \pm j = \sqrt{2}e^{\pm j\pi/4}$ ($r\cos\theta = r\sin\theta = 1$) và cực $0.5$. Khai triển:
+\[
+    \frac{1 + 6z^{-1} + z^{-2}}{(1 - 2z^{-1} + 2z^{-2})(1 - 0.5z^{-1})} = \frac{3.4}{1 - 0.5z^{-1}} + \frac{-2.4(1 - z^{-1}) + 9.2\, z^{-1}}{1 - 2z^{-1} + 2z^{-2}}.
+\]
+Nhân với $\frac{1}{4}$:
+\[
+    x(n) = \left[0.85\,(0.5)^n + (\sqrt{2})^n\left(-0.6\cos\tfrac{\pi n}{4} + 2.3\sin\tfrac{\pi n}{4}\right)\right] u(n).
+\]
+
+\textbf{(f)} $\dfrac{2 - 1.5z^{-1}}{(1 - z^{-1})(1 - 0.5z^{-1})} = \dfrac{1}{1 - z^{-1}} + \dfrac{1}{1 - 0.5z^{-1}}$, nên $x(n) = \left[1 + (0.5)^n\right] u(n)$.
+
+\textbf{(g)} Đây chính là $X_2(z)$ ở Bài tập 3 với ROC nhân quả $|z| > 2$:
+\[
+    x(n) = \tfrac{1}{4}\delta(n) + \tfrac{1}{2}(-2)^n u(n) + \tfrac{1}{4}(n+1)(-2)^n u(n) = \tfrac{1}{4}\delta(n) + \tfrac{n+3}{4}(-2)^n u(n).
+\]
+
+\textbf{(h)} Hình P3.14 có các không điểm tại $0$, $-\frac{1}{4}$, $-\frac{1}{2}$ và các cực tại $\frac{1}{2}$, $\frac{1}{\sqrt{2}}e^{\pm j\pi/4}$. Cặp cực phức cho thừa số $z^2 - z + \frac{1}{2}$. Với $G = \frac{1}{4}$:
+\[
+    X(z) = \frac{1}{4}\cdot\frac{z\left(z + \frac{1}{2}\right)\left(z + \frac{1}{4}\right)}{\left(z - \frac{1}{2}\right)\left(z^2 - z + \frac{1}{2}\right)}
+    = \frac{1}{4}\cdot\frac{\left(1 + \frac{1}{2}z^{-1}\right)\left(1 + \frac{1}{4}z^{-1}\right)}{\left(1 - \frac{1}{2}z^{-1}\right)\left(1 - z^{-1} + \frac{1}{2}z^{-2}\right)}.
+\]
+Khai triển phân thức (phần trong ngoặc) được $\dfrac{3}{1 - \frac{1}{2}z^{-1}} + \dfrac{-2\left(1 - \frac{1}{2}z^{-1}\right) + 3.5 \cdot \frac{1}{2}z^{-1}}{1 - z^{-1} + \frac{1}{2}z^{-2}}$, nên
+\[
+    x(n) = \left[0.75\left(\tfrac{1}{2}\right)^n + \left(\tfrac{1}{\sqrt{2}}\right)^n\left(-0.5\cos\tfrac{\pi n}{4} + 0.875\sin\tfrac{\pi n}{4}\right)\right] u(n).
+\]
+
+\textbf{(i)} $\dfrac{1 - \frac{1}{2}z^{-1}}{1 + \frac{1}{2}z^{-1}} = -1 + \dfrac{2}{1 + \frac{1}{2}z^{-1}}$, nên $x(n) = -\delta(n) + 2\left(-\frac{1}{2}\right)^n u(n)$.
+
+\textbf{(j)} Viết lại $\dfrac{1 - a z^{-1}}{z^{-1} - a} = -\dfrac{1}{a}\cdot\dfrac{1 - a z^{-1}}{1 - \frac{1}{a}z^{-1}}$ và chia đa thức:
+\[
+    X(z) = -a - \frac{1 - a^2}{a}\cdot\frac{1}{1 - \frac{1}{a}z^{-1}}
+    \quad\Longrightarrow\quad
+    x(n) = -a\,\delta(n) + \left(a^2 - 1\right) a^{-n-1} u(n).
+\]
+Đây là hệ thông tất (all-pass): cực tại $\frac{1}{a}$ và không điểm tại $a$ đối xứng nhau qua đường tròn đơn vị.
+
+\textbf{Kiểm tra:} chia đa thức trực tiếp từng $X(z)$ và so với công thức, ví dụ:
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{c|ccccc}
+\toprule
+Câu & $x(0)$ & $x(1)$ & $x(2)$ & $x(3)$ & $x(4)$ \\
+\midrule
+(a) & 1 & 0 & $-2$ & 6 & $-14$ \\
+(b) & 1 & 1 & 0.5 & 0 & $-0.25$ \\
+(e) & 0.25 & 2.125 & 4.8125 & 5.9063 & 2.4531 \\
+(f) & 2 & 1.5 & 1.25 & 1.125 & 1.0625 \\
+(h) & 0.25 & 0.5625 & 0.625 & 0.4375 & 0.1719 \\
+\bottomrule
+\end{tabular}
+\caption{Một số giá trị đầu của $x(n)$ trong Bài 3.14: chia đa thức và tính bằng công thức cho cùng kết quả}
+\end{table}
+
+% ---------------------------------------------------------------------
+\needspace{8\baselineskip}
+\subsubsection*{Bài 3.19}
+\begin{mdframed}[style=exbox]
+Bằng cách lấy đạo hàm $X(z)$ rồi dùng tính chất của biến đổi Z, xác định $x(n)$ với:
+(a) $X(z) = \log(1 - 2z)$, $|z| < \frac{1}{2}$;
+(b) $X(z) = \log(1 - z^{-1})$, $|z| > \frac{1}{2}$.
+\end{mdframed}
+
+Dùng tính chất $n\,x(n) \zpair -z\dfrac{dX(z)}{dz}$.
+
+\textbf{(a)} $-z\dfrac{dX}{dz} = -z \cdot \dfrac{-2}{1 - 2z} = \dfrac{2z}{1 - 2z} = \sum_{k=1}^{\infty} (2z)^k$ (hội tụ khi $|z| < \frac{1}{2}$). Số hạng $2^k z^k$ ứng với thời điểm $n = -k$, nên $n\,x(n) = 2^{-n} u(-n-1) = \left(\frac{1}{2}\right)^n u(-n-1)$. Suy ra
+\[
+    x(n) = \frac{1}{n}\left(\frac{1}{2}\right)^n u(-n-1).
+\]
+
+\textbf{(b)} $-z\dfrac{dX}{dz} = -z \cdot \dfrac{z^{-2}}{1 - z^{-1}} = -\dfrac{z^{-1}}{1 - z^{-1}} \zpair -u(n-1)$ (dạng nhân quả). Suy ra $n\,x(n) = -u(n-1)$, tức
+\[
+    x(n) = -\frac{1}{n}\, u(n-1).
+\]
+\textbf{Kiểm tra:} khai triển Taylor $\log(1 - w) = -\sum_{k \ge 1} \frac{w^k}{k}$ cho đúng các hệ số trên ở cả hai câu. (Chuỗi ở câu (b) thực ra hội tụ khi $|z| > 1$; ROC $|z| > \frac{1}{2}$ trong đề nhiều khả năng là lỗi in, nhưng không ảnh hưởng tới việc chọn dạng nhân quả.)
+
+% ---------------------------------------------------------------------
+\needspace{8\baselineskip}
+\subsubsection*{Bài 3.20}
+\begin{mdframed}[style=exbox]
+(a) Vẽ giản đồ cực--không của $x_1(n) = r^n \sin(\omega_0 n)\, u(n)$, $0 < r < 1$.
+(b) Tính $X_2(z)$ ứng với giản đồ cực--không ở câu (a).
+(c) So sánh $X_1(z)$ với $X_2(z)$. Chúng có giống nhau không? Nếu không, hãy nêu cách tìm $X_1(z)$ từ giản đồ cực--không.
+\end{mdframed}
+
+\textbf{(a)} Ta có
+\[
+    X_1(z) = \frac{r\sin\omega_0\, z^{-1}}{1 - 2r\cos\omega_0\, z^{-1} + r^2 z^{-2}} = \frac{r\sin\omega_0\, z}{z^2 - 2r\cos\omega_0\, z + r^2}, \qquad |z| > r.
+\]
+Hệ có một không điểm tại $z = 0$ và cặp cực phức liên hợp $z = r e^{\pm j\omega_0}$, nằm trong đường tròn đơn vị vì $r < 1$.
+\begin{figure}[H]
+    \centering
+    \begin{tikzpicture}[scale=1.4]
+        \draw[->] (-1.4,0) -- (1.5,0) node[right] {\small Re};
+        \draw[->] (0,-1.3) -- (0,1.4) node[above] {\small Im};
+        \draw[dashed, black!50] (0,0) circle (1);
+        \node[black!60] at (0.78,-0.8) {\scriptsize $|z| = 1$};
+        \draw (0,0) circle (2pt);
+        \draw (0,0) -- ({0.7*cos(50)},{0.7*sin(50)});
+        \node at ({0.7*cos(50)},{0.7*sin(50)}) {$\times$};
+        \node at ({0.7*cos(50)},{-0.7*sin(50)}) {$\times$};
+        \draw[->] (0.3,0) arc (0:50:0.3);
+        \node at (0.42,0.17) {\scriptsize $\omega_0$};
+        \node[above left] at ({0.35*cos(50)},{0.35*sin(50)}) {\scriptsize $r$};
+        \node[above right] at ({0.7*cos(50)},{0.7*sin(50)}) {\scriptsize $re^{j\omega_0}$};
+        \node[below right] at ({0.7*cos(50)},{-0.7*sin(50)}) {\scriptsize $re^{-j\omega_0}$};
+    \end{tikzpicture}
+    \caption{Giản đồ cực--không của $x_1(n) = r^n\sin(\omega_0 n)u(n)$ (\,$\circ$: không điểm, $\times$: cực)}
+\end{figure}
+
+\textbf{(b)} Một giản đồ cực--không chỉ cho biết vị trí các cực và không điểm, nên biến đổi Z dựng lại từ đó có dạng
+\[
+    X_2(z) = G\cdot\frac{z}{\left(z - re^{j\omega_0}\right)\left(z - re^{-j\omega_0}\right)} = G\cdot\frac{z}{z^2 - 2r\cos\omega_0\, z + r^2},
+\]
+với $G$ là một hằng số chưa xác định. Nếu lấy $G = 1$ thì $X_2(z) = \dfrac{z}{z^2 - 2r\cos\omega_0\, z + r^2}$.
+
+\textbf{(c)} $X_1(z) = r\sin\omega_0 \cdot X_2(z)$, tức hai biểu thức có cùng cực, cùng không điểm nhưng khác nhau một hệ số khuếch đại. Như vậy chúng \emph{không giống hệt nhau}: giản đồ cực--không xác định $X(z)$ chỉ sai khác một hằng số. Để tìm đúng $X_1(z)$, cần thêm một thông tin để tính $G$, ví dụ một giá trị của tín hiệu: theo định lý giá trị đầu, $x_1(1) = \lim_{z\to\infty} z X_1(z) = G$, mà $x_1(1) = r\sin\omega_0$, nên $G = r\sin\omega_0$.
 
 \section{Bàn Luận}
 Qua bài thực hành, em thấy biến đổi Z giúp giải các bài toán trong miền thời gian gọn hơn nhiều: tích chập trở thành phép nhân, phương trình sai phân trở thành phương trình đại số, và mọi bài đều quy về khai triển phân thức rồi tra bảng. Bài 3 cho thấy rõ vai trò của ROC: cùng một biểu thức $X(z)$ nhưng mỗi ROC lại ứng với một tín hiệu khác nhau (nhân quả, phản nhân quả hoặc hai phía), nên khi tìm biến đổi ngược bắt buộc phải xét ROC. Ở Bài 5, cặp cực phức có $|p| = \sqrt{3} > 1$ làm hệ không ổn định, còn biến đổi $Z^+$ giúp đưa điều kiện đầu vào để tách riêng $y_{zi}$ và $y_{zs}$. Phần khó nhất với em là xử lý cực kép và cực phức; để tránh sai sót, em đã kiểm tra mọi kết quả bằng cách tính đệ quy vài giá trị đầu từ phương trình sai phân, và tất cả đều khớp.
